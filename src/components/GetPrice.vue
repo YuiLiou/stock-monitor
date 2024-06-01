@@ -1,10 +1,13 @@
+<!-- GetPrice.vue -->
 <template>
-  <div class="hello">Hello, 2330</div>
-  <div class="price-info">
-    <span class="last-price">{{ lastPrice }}</span>
-    <span :class="priceChange > 0 ? 'price-up' : 'price-down'">
-      {{ priceChange }} ({{ priceChangePercentage }}%)
-    </span>
+  <div class="price-container">
+    <div class="hello">Hello, {{ stockSymbol }}</div>
+    <div class="price-info">
+      <span class="last-price">{{ lastPrice }}</span>
+      <span :class="priceChange > 0 ? 'price-up' : 'price-down'">
+        {{ priceChange }} ({{ priceChangePercentage }}%)
+      </span>
+    </div>
   </div>
 </template>
 
@@ -14,32 +17,42 @@ import { ref, computed, onMounted } from "vue";
 
 export default {
   name: "GetPrice",
-  setup() {
-    const lastPrice = ref(0);  // 使用 ref 创建响应式数据
+  props: {
+    stockSymbol: {
+      type: String,
+      required: true,
+    },
+  },
+  setup(props) {
+    const lastPrice = ref(0);
     const previousClose = ref(0);
+    const priceChange = ref(0);
 
     onMounted(() => {
       axios
-        .get("https://api.fugle.tw/marketdata/v1.0/stock/intraday/quote/2330", {
-          headers: {
-            "X-API-KEY": process.env.VUE_APP_API_KEY,
+        .get(
+          `https://api.fugle.tw/marketdata/v1.0/stock/intraday/quote/${props.stockSymbol}`,
+          {
+            headers: {
+              "X-API-KEY": process.env.VUE_APP_API_KEY,
+            },
           },
-        })
+        )
         .then((res) => {
-          lastPrice.value = res.data['lastPrice'];  // 使用 .value 访问 ref 的值
-          previousClose.value = res.data['previousClose'];
-          console.log(res.data['lastPrice']);
+          lastPrice.value = res.data["lastPrice"];
+          previousClose.value = res.data["previousClose"];
+          priceChange.value = (res.data['lastPrice'] - res.data['previousClose']).toFixed(2);
+          console.log(res.data["lastPrice"]);
         });
     });
 
-    const priceChange = computed(() => lastPrice.value - previousClose.value);
     const priceChangePercentage = computed(() => {
       if (previousClose.value === 0) return 0;
       return ((priceChange.value / previousClose.value) * 100).toFixed(2);
     });
 
     return {
-      lastPrice,  // 返回响应式数据以便在模板中使用
+      lastPrice,
       priceChange,
       priceChangePercentage,
     };
@@ -47,11 +60,22 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.hello {
+.price-container {
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin: 10px;
   text-align: center;
-  margin-bottom: 20px;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.hello {
+  margin-bottom: 10px;
 }
 
 .price-info {
@@ -72,23 +96,5 @@ export default {
 
 .price-down {
   color: green;
-}
-
-h3 {
-  margin: 40px 0 0;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
 }
 </style>

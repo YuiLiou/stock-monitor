@@ -1,15 +1,15 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png" />
-  <GetPrice msg="Welcome to Your Vue.js App" />
+  <OverView />
 </template>
 
 <script>
-import GetPrice from "./components/GetPrice.vue";
+import OverView from "./components/OverView.vue";
 
 export default {
   name: "App",
   components: {
-    GetPrice,
+    OverView,
   },
 };
 </script>
