@@ -25,7 +25,7 @@ export default {
   },
   setup() {
     const newStockSymbol = ref("");
-    const stocks = ref([2330, 8299]);
+    const stocks = ref(["2330", "8299", "2501", "2527"]);
 
     const addStock = () => {
       if (newStockSymbol.value.trim() !== "") {
@@ -55,10 +55,10 @@ export default {
 }
 
 .grid-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
 
 input {
   margin-right: 10px;
