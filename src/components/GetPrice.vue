@@ -1,6 +1,6 @@
 <template>
-  <div class="price-container">
-    <div class="name">{{ name }} ({{ stockSymbol }})</div>
+  <div class="price-container" :class="{ 'hovered': isHovered }" @mouseover="isHovered = true" @mouseout="isHovered = false">
+    <div class="name" :class="{ 'hovered': isHovered }">{{ name }} ({{ stockSymbol }})</div>
     <div class="price-info" :style="stockStyle">
       <span class="last-price">{{ lastPrice }}</span>
       <span>
@@ -31,6 +31,7 @@ export default {
     const priceDownOpacity = ref(1);
     const priceUpOpacity = ref(1);
     const name = ref("");
+    const isHovered = ref(false);
 
     const fetchStockPrice = async () => {
       try {
@@ -108,6 +109,7 @@ export default {
       priceDownOpacity,
       priceUpOpacity,
       name,
+      isHovered
     };
   },
 };
@@ -130,9 +132,20 @@ export default {
   font-weight: bold;
 }
 
+.price-container.hovered {
+  opacity: 0.7;
+  background-color: #B5B5B5;
+  color: white;
+}
+
 .name {
   margin-bottom: 10px;
   font-size: 24px;
+  color: #191970;
+}
+
+.name.hovered {
+  color: white;
 }
 
 .price-info {
