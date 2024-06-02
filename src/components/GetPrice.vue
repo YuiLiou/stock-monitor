@@ -1,13 +1,20 @@
 <template>
-  <div class="price-container" :class="{ 'hovered': isHovered }" @mouseover="isHovered = true" @mouseout="isHovered = false">
-    <div class="name" :class="{ 'hovered': isHovered }">{{ name }} ({{ stockSymbol }})</div>
-    <div class="price-info" :style="stockStyle">
+  <div
+    class="price-container"
+    :class="{ hovered: isHovered }"
+    @mouseover="isHovered = true"
+    @mouseout="isHovered = false"
+  >
+    <div class="name" :class="{ hovered: isHovered }">
+      {{ name }} ({{ stockSymbol }})
+    </div>
+    <div class="price-info" :class="{ hovered: isHovered }" :style="stockStyle">
       <span class="last-price">{{ lastPrice }}</span>
       <span>
         <template v-if="priceChange > 0">⬆</template>
         <template v-else-if="priceChange < 0">⬇</template>
         {{ Math.abs(priceChange) }} ({{ priceChangePercentage }}%)
-      </span>      
+      </span>
     </div>
   </div>
 </template>
@@ -109,7 +116,7 @@ export default {
       priceDownOpacity,
       priceUpOpacity,
       name,
-      isHovered
+      isHovered,
     };
   },
 };
@@ -134,7 +141,7 @@ export default {
 
 .price-container.hovered {
   opacity: 0.7;
-  background-color: #B5B5B5;
+  background-color: #b5b5b5;
   color: white;
 }
 
@@ -155,6 +162,10 @@ export default {
   font-size: 20px;
   opacity: 1;
   transition: opacity 0.2s ease-in-out;
+}
+
+.price-info.hovered {
+  background-color: white;
 }
 
 .last-price {
