@@ -1,11 +1,13 @@
 <template>
   <div class="price-container">
-    <div class="name">{{ name }}, {{ stockSymbol }}</div>
+    <div class="name">{{ name }} ({{ stockSymbol }})</div>
     <div class="price-info" :style="stockStyle">
       <span class="last-price">{{ lastPrice }}</span>
-      <span :class="priceChange > 0 ? 'price-up' : 'price-down'">
-        {{ priceChange }} ({{ priceChangePercentage }}%)
-      </span>
+      <span>
+        <template v-if="priceChange > 0">⬆</template>
+        <template v-else-if="priceChange < 0">⬇</template>
+        {{ Math.abs(priceChange) }} ({{ priceChangePercentage }}%)
+      </span>      
     </div>
   </div>
 </template>
@@ -62,6 +64,7 @@ export default {
               : 1,
         boxShadow:
           priceChange.value < 0 ? "1px 1px 10px #b5ffae" : "1px 1px 10px red",
+        color: priceChange.value < 0 ? "green" : "red",
       };
     });
     let priceDownInterval, priceUpInterval;
@@ -122,11 +125,14 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 10px; /* Add rounded corners */
+  border-radius: 10px;
+  font-family: "Microsoft JhengHei", sans-serif;
+  font-weight: bold;
 }
 
 .name {
   margin-bottom: 10px;
+  font-size: 24px;
 }
 
 .price-info {
@@ -138,26 +144,7 @@ export default {
   transition: opacity 0.2s ease-in-out;
 }
 
-.price-container.price-down {
-  background-color: #10c504;
-  color: black;
-}
-
-.price-container.price-up {
-  background-color: #d9001b;
-  color: black;
-}
-
 .last-price {
-  color: black;
   margin-right: 10px;
-}
-
-.price-up {
-  color: red;
-}
-
-.price-down {
-  color: green;
 }
 </style>
